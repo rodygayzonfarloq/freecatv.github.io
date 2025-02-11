@@ -4,104 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live TV Streaming</title>
-    
-    <!-- Adding some basic styling to decorate the page -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background: #333;
-            padding: 15px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            color: #fff;
-        }
-
-        .content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-            background-color: #222;
-        }
-
-        .video-container {
-            position: relative;
-            width: 80%;
-            max-width: 900px;
-            background-color: black;
-            border: 2px solid #fff;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .footer {
-            background: #333;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-
-        .footer p {
-            margin: 0;
-            color: #fff;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
     <header>
         <h1>Live TV Streaming</h1>
+        <nav>
+            <ul>
+                <li><a href="#live">Live</a></li>
+                <li><a href="#schedule">Schedule</a></li>
+            </ul>
+        </nav>
     </header>
-
-    <div class="content">
-        <!-- Video container for the live stream -->
-        <div class="video-container">
-            <video id="video" width="100%" controls></video>
-        </div>
-    </div>
-
-    <div class="footer">
-        <p>Powered by Free TV Service</p>
-    </div>
-
-    <!-- Include hls.js for HLS streaming -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <main>
+        <section id="live">
+            <h2>Now Streaming</h2>
+            <video id="video" controls autoplay></video>
+        </section>
+        
+        <section id="schedule">
+            <h2>Upcoming Shows</h2>
+            <ul>
+                <li>Show 1 - 10:00 AM</li>
+                <li>Show 2 - 12:00 PM</li>
+                <li>Show 3 - 3:00 PM</li>
+            </ul>
+        </section>
+    </main>
+    
     <script>
-        // Set your live stream link (m3u8)
-        const videoUrl = "http://125.209.88.166:45793/BRN/ArySports.stream/playlist.m3u8";
+        var video = document.getElementById('video');
+        var videoSrc = 'http://125.209.88.166:45793/BRN/ArySports.stream/playlist.m3u8';
 
-        // Check if HLS.js is supported
         if (Hls.isSupported()) {
-            const video = document.getElementById('video');
-            const hls = new Hls();
-
-            // Bind the live stream to the player
-            hls.loadSource(videoUrl);
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
             hls.attachMedia(video);
-
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 video.play();
             });
-        }
-        // If browser doesn't support HLS.js, use the native player for .m3u8
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            const video = document.getElementById('video');
-            video.src = videoUrl;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+            video.play();
         }
     </script>
 </body>
